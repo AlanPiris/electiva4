@@ -1,9 +1,9 @@
 const songs = [
-  { title: "Espresso", artist: "Sabriña Carpenter", img: "images/espresso.jpg", position: 0, favorite: false, plays: null },
+  { title: "Espresso", artist: "Sabriña Carpentér", img: "images/espresso.jpg", position: 0, favorite: false, plays: null },
   { title: "Ñot Like Us", artist: "Kendrick Lamar", img: "images/not_like_us.jpg", position: 1, favorite: false, plays: null },
   { title: "Birds of a Feather", artist: "Billie Eilish", img: "images/birds_of_a_feather.jpg", position: 2, favorite: false, plays: null },
   { title: "Who", artist: "Jimin", img: "images/who.jpg", position: 3, favorite: false, plays: null },
-  { title: "Si Antes Te Hubiera Conocido", artist: "KAROL G", img: "images/si_antes_te_hubiera_conocido.jpg", position: 4, favorite: false, plays: null }
+  { title: "Si Ántes Te Hubiera Conocido", artist: "KAROL G", img: "images/si_antes_te_hubiera_conocido.jpg", position: 4, favorite: false, plays: null }
 ];
 
 function assignFavorites() {
