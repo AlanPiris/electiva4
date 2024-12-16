@@ -1,9 +1,9 @@
 const songs = [
-  { title: "Espresso", artist: "Sabriña Carpentér", img: "images/espresso.jpg", position: 0, favorite: false, plays: null },
-  { title: "Ñot Like Us", artist: "Kendrick Lamar", img: "images/not_like_us.jpg", position: 1, favorite: false, plays: null },
-  { title: "Birds of a Feather", artist: "Billie Eilish", img: "images/birds_of_a_feather.jpg", position: 2, favorite: false, plays: null },
-  { title: "Who", artist: "Jimin", img: "images/who.jpg", position: 3, favorite: false, plays: null },
-  { title: "Si Ántes Te Hubiera Conocido", artist: "KAROL G", img: "images/si_antes_te_hubiera_conocido.jpg", position: 4, favorite: false, plays: null }
+  { title: "Espresso", artist: "Sabrina Carpenter", img: "images/espresso.jpg", position: 0, previousPosition: 0, favorite: false, plays: null },
+  { title: "Not Like Us", artist: "Kendrick Lamar", img: "images/not_like_us.jpg", position: 1, previousPosition: 1, favorite: false, plays: null },
+  { title: "Birds of a Feather", artist: "Billie Eilish", img: "images/birds_of_a_feather.jpg", position: 2, previousPosition: 2, favorite: false, plays: null },
+  { title: "Who", artist: "Jimin", img: "images/who.jpg", position: 3, previousPosition: 3, favorite: false, plays: null },
+  { title: "Si Antes Te Hubiera Conocido", artist: "KAROL G", img: "images/si_antes_te_hubiera_conocido.jpg", position: 4, previousPosition: 4, favorite: false, plays: null }
 ];
 
 function assignFavorites() {
@@ -17,9 +17,19 @@ function assignFavorites() {
 }
 
 function shuffleRanking() {
-  // Mezclamos el ranking y limpiamos las reproducciones
+  // Actualizar las posiciones previas antes de mezclar
+  songs.forEach((song, index) => {
+    song.previousPosition = index;
+  });
+
+  // Mezclar el ranking
   songs.sort(() => Math.random() - 0.5);
-  songs.forEach(song => song.plays = null);
+
+  // Actualizar las posiciones actuales después de mezclar
+  songs.forEach((song, index) => {
+    song.position = index;
+  });
+
   displayRanking();
 }
 
@@ -28,11 +38,17 @@ function displayRanking() {
   rankingList.innerHTML = "";
 
   songs.forEach((song, index) => {
-    const arrow =
-      index === 0 ? "" : // Sin flecha ni guion para el TOP
-      song.position < index ? "⬆️" :
-      song.position > index ? "⬇️" :
-      "➖";
+    let arrow = "";
+    if (index !== 0) { // Sin flecha ni guion para el TOP
+      if (song.previousPosition < index) {
+        arrow = "⬇️"; // Bajó en el ranking
+      } else if (song.previousPosition > index) {
+        arrow = "⬆️"; // Subió en el ranking
+      } else {
+        arrow = "➖"; // No cambió su posición
+      }
+    }
+
     const favorite = song.favorite ? "⭐" : "";
     const playsText = song.plays !== null ? `${song.plays.toLocaleString()} reproducciones` : "";
 
@@ -99,16 +115,14 @@ function createImageAndOptions() {
     downloadPdf.textContent = "Descargar PDF";
     downloadPdf.classList.add("btn-secondary");
     downloadPdf.addEventListener("click", () => {
-      const pdf = new jsPDF("p", "mm", "a4"); // Formato de página A4
+      const pdf = new jsPDF("p", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Ajustar altura proporcionalmente
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-      // Agregar la imagen al PDF
       pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pdfWidth, pdfHeight);
       pdf.save("ranking.pdf");
     });
 
-    // Añadir botones al contenedor
     buttonContainer.appendChild(downloadPng);
     buttonContainer.appendChild(downloadPdf);
     imageContainer.appendChild(buttonContainer);
