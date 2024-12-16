@@ -1,0 +1,155 @@
+/* Estilo general */
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #1db954, #191414);
+  color: white;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+header {
+  padding: 20px;
+  background: #191414;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+header h1 {
+  font-size: 2.5rem;
+  color: #1db954;
+}
+
+footer {
+  margin-top: 20px;
+  padding: 10px;
+  background: #101010;
+  color: #888;
+}
+
+footer p {
+  margin: 0;
+}
+
+main {
+  padding: 20px;
+}
+
+/* Estilo para los elementos del ranking */
+ul#ranking {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+ul#ranking li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #222;
+  border-radius: 10px;
+  margin: 10px 0;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+}
+
+ul#ranking li:hover {
+  transform: scale(1.05);
+}
+
+/* Imagen circular con borde */
+ul#ranking li img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid #1db954;
+  margin-right: 15px;
+}
+
+/* Contenedor para título y artista */
+ul#ranking li .song-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 5px;
+}
+
+/* Trapecio para el título */
+ul#ranking li .song-info .title {
+  position: relative;
+  background: linear-gradient(135deg, #ff6f61, #ff9472);
+  padding: 10px;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 5px;
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+}
+
+/* Trapecio para el artista */
+ul#ranking li .song-info .artist {
+  position: relative;
+  background: linear-gradient(135deg, #6c63ff, #a393ff);
+  padding: 8px;
+  color: white;
+  font-size: 0.9rem;
+  text-align: center;
+  border-radius: 5px;
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+}
+
+/* Flechas dinámicas */
+ul#ranking li .arrow {
+  font-size: 1.5rem;
+  margin-left: 15px;
+  font-weight: bold;
+}
+
+ul#ranking li .arrow.up {
+  color: #00ff00;
+}
+
+ul#ranking li .arrow.down {
+  color: #ff0000;
+}
+
+ul#ranking li .arrow.stay {
+  color: #888;
+}
+
+/* Estilo para la estrella de favorito */
+.favorite {
+  font-size: 1.2rem;
+  color: gold;
+  margin-left: 5px;
+}
+
+/* Contenedor de la imagen */
+#imageContainer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#imageContainer img {
+  max-width: 90%;
+  border-radius: 10px;
+  border: 2px solid white;
+}
+
+#imageContainer button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 20px;
+  border: none;
+  transition: background 0.3s;
+}
+
+#imageContainer button:hover {
+  background-color: #1db954;
+  color: white;
+}
