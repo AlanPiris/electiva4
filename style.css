@@ -52,6 +52,7 @@ ul#ranking li {
   padding: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s;
+  cursor: pointer;
 }
 
 ul#ranking li:hover {
@@ -75,7 +76,7 @@ ul#ranking li .song-info {
   gap: 5px;
 }
 
-/* Trapecio para el título */
+/* Trapecios rectangulares para el título */
 ul#ranking li .song-info .title {
   position: relative;
   background: linear-gradient(135deg, #ff6f61, #ff9472);
@@ -85,10 +86,10 @@ ul#ranking li .song-info .title {
   font-weight: bold;
   text-align: center;
   border-radius: 5px;
-  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+  clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
 }
 
-/* Trapecio para el artista */
+/* Trapecios rectangulares para el artista */
 ul#ranking li .song-info .artist {
   position: relative;
   background: linear-gradient(135deg, #6c63ff, #a393ff);
@@ -97,59 +98,54 @@ ul#ranking li .song-info .artist {
   font-size: 0.9rem;
   text-align: center;
   border-radius: 5px;
-  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+  clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
 }
 
-/* Flechas dinámicas */
-ul#ranking li .arrow {
-  font-size: 1.5rem;
-  margin-left: 15px;
-  font-weight: bold;
-}
-
-ul#ranking li .arrow.up {
-  color: #00ff00;
-}
-
-ul#ranking li .arrow.down {
-  color: #ff0000;
-}
-
-ul#ranking li .arrow.stay {
-  color: #888;
-}
-
-/* Estilo para la estrella de favorito */
-.favorite {
-  font-size: 1.2rem;
-  color: gold;
-  margin-left: 5px;
-}
-
-/* Contenedor de la imagen */
-#imageContainer {
-  margin-top: 20px;
+/* Estilo para las reproducciones */
+.plays {
+  font-size: 0.9rem;
+  color: white;
+  background: linear-gradient(135deg, #444, #666);
+  padding: 5px 10px;
+  margin-top: 5px;
   text-align: center;
+  border-radius: 5px;
+  clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+  display: none; /* Oculto por defecto */
 }
 
-#imageContainer img {
-  max-width: 90%;
-  border-radius: 10px;
-  border: 2px solid white;
+.plays.visible {
+  display: block; /* Mostramos al activar el evento */
 }
 
-#imageContainer button {
-  display: block;
-  margin: 10px auto;
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  border-radius: 20px;
-  border: none;
-  transition: background 0.3s;
+/* Contenedor para los botones alineados */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
 }
 
-#imageContainer button:hover {
+.btn-primary {
   background-color: #1db954;
   color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-secondary {
+  background-color: #ff6f61;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button:hover {
+  opacity: 0.8;
 }

@@ -1,24 +1,26 @@
 const songs = [
-  { title: "Espresso", artist: "Sabrina Carpenter", img: "images/espresso.jpg", position: 0, favorite: false },
-  { title: "Not Like Us", artist: "Kendrick Lamar", img: "images/not_like_us.jpg", position: 1, favorite: false },
-  { title: "Birds of a Feather", artist: "Billie Eilish", img: "images/birds_of_a_feather.jpg", position: 2, favorite: false },
-  { title: "Who", artist: "Jimin", img: "images/who.jpg", position: 3, favorite: false },
-  { title: "Si Antes Te Hubiera Conocido", artist: "KAROL G", img: "images/si_antes_te_hubiera_conocido.jpg", position: 4, favorite: false }
+  { title: "Espresso", artist: "Sabriña Carpenter", img: "images/espresso.jpg", position: 0, favorite: false, plays: null },
+  { title: "Ñot Like Us", artist: "Kendrick Lamar", img: "images/not_like_us.jpg", position: 1, favorite: false, plays: null },
+  { title: "Birds of a Feather", artist: "Billie Eilish", img: "images/birds_of_a_feather.jpg", position: 2, favorite: false, plays: null },
+  { title: "Who", artist: "Jimin", img: "images/who.jpg", position: 3, favorite: false, plays: null },
+  { title: "Si Antes Te Hubiera Conocido", artist: "KAROL G", img: "images/si_antes_te_hubiera_conocido.jpg", position: 4, favorite: false, plays: null }
 ];
 
 function assignFavorites() {
-  songs.forEach(song => song.favorite = false);
-  const favoriteCount = Math.floor(Math.random() * 2) + 1;
-  const selectedFavorites = new Set();
-
-  while (selectedFavorites.size < favoriteCount) {
-    const randomIndex = Math.floor(Math.random() * songs.length);
-    selectedFavorites.add(randomIndex);
+  const selected = new Set();
+  while (selected.size < 2) {
+    selected.add(Math.floor(Math.random() * songs.length));
   }
-
-  selectedFavorites.forEach(index => {
-    songs[index].favorite = true;
+  songs.forEach((song, index) => {
+    song.favorite = selected.has(index);
   });
+}
+
+function shuffleRanking() {
+  // Mezclamos el ranking y limpiamos las reproducciones
+  songs.sort(() => Math.random() - 0.5);
+  songs.forEach(song => song.plays = null);
+  displayRanking();
 }
 
 function displayRanking() {
@@ -26,82 +28,100 @@ function displayRanking() {
   rankingList.innerHTML = "";
 
   songs.forEach((song, index) => {
-    let arrow = "";
-    if (index === 0) arrow = "";
-    else if (song.position > index) arrow = `<span class='arrow up'>⬆️</span>`;
-    else if (song.position < index) arrow = `<span class='arrow down'>⬇️</span>`;
-    else arrow = `<span class='arrow stay'>➖</span>`;
-
-    const favoriteStar = song.favorite ? `<span class='favorite'>⭐</span>` : "";
+    const arrow =
+      index === 0 ? "" : // Sin flecha ni guion para el TOP
+      song.position < index ? "⬆️" :
+      song.position > index ? "⬇️" :
+      "➖";
+    const favorite = song.favorite ? "⭐" : "";
+    const playsText = song.plays !== null ? `${song.plays.toLocaleString()} reproducciones` : "";
 
     const li = document.createElement("li");
     li.innerHTML = `
       <img src="${song.img}" alt="${song.title}">
       <div class="song-info">
-        <div class="title">${index + 1}. ${song.title} ${favoriteStar}</div>
-        <div class="artist">${song.artist}</div>
+        <div class="title clickable" data-index="${index}">${index + 1}. ${song.title} ${favorite}</div>
+        <div class="artist clickable" data-index="${index}">${song.artist}</div>
+        <div class="plays ${song.plays !== null ? "visible" : "hidden"}" id="plays-${index}">${playsText}</div>
       </div>
-      ${arrow}
+      <span class="arrow">${arrow}</span>
     `;
     rankingList.appendChild(li);
+
+    li.querySelector(".title").addEventListener("click", () => showPlays(index));
+    li.querySelector(".artist").addEventListener("click", () => showPlays(index));
   });
 }
+
+function showPlays(index) {
+  const song = songs[index];
+  const playsElement = document.getElementById(`plays-${index}`);
+
+  // Solo genera reproducciones si no existen
+  if (song.plays === null) {
+    song.plays = Math.floor(Math.random() * 1000000) + 10000;
+    playsElement.textContent = `${song.plays.toLocaleString()} reproducciones`;
+    playsElement.classList.remove("hidden");
+    playsElement.classList.add("visible");
+  }
+}
+
+function createImageAndOptions() {
+  const container = document.getElementById("ranking");
+
+  // Generar imagen del contenedor
+  html2canvas(container, { scale: 2, useCORS: true }).then(canvas => {
+    const imageContainer = document.getElementById("imageContainer");
+    imageContainer.innerHTML = "";
+
+    // Crear imagen en PNG
+    const img = document.createElement("img");
+    img.src = canvas.toDataURL("image/png");
+    imageContainer.appendChild(img);
+
+    // Crear contenedor de botones
+    const buttonContainer = document.createElement("div");
+    buttonContainer.classList.add("button-container");
+
+    // Botón para descargar PNG
+    const downloadPng = document.createElement("button");
+    downloadPng.textContent = "Descargar PNG";
+    downloadPng.classList.add("btn-primary");
+    downloadPng.addEventListener("click", () => {
+      const a = document.createElement("a");
+      a.href = img.src;
+      a.download = "ranking.png";
+      a.click();
+    });
+
+    // Botón para descargar PDF
+    const downloadPdf = document.createElement("button");
+    downloadPdf.textContent = "Descargar PDF";
+    downloadPdf.classList.add("btn-secondary");
+    downloadPdf.addEventListener("click", () => {
+      const pdf = new jsPDF("p", "mm", "a4"); // Formato de página A4
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Ajustar altura proporcionalmente
+
+      // Agregar la imagen al PDF
+      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save("ranking.pdf");
+    });
+
+    // Añadir botones al contenedor
+    buttonContainer.appendChild(downloadPng);
+    buttonContainer.appendChild(downloadPdf);
+    imageContainer.appendChild(buttonContainer);
+  }).catch(error => {
+    console.error("Error al generar la imagen o PDF:", error);
+    alert("Hubo un problema al generar el PDF. Por favor, inténtalo nuevamente.");
+  });
+}
+
+document.getElementById("shuffleBtn").addEventListener("click", shuffleRanking);
+document.getElementById("createImgBtn").addEventListener("click", createImageAndOptions);
 
 document.addEventListener("DOMContentLoaded", () => {
   assignFavorites();
   displayRanking();
 });
-
-document.getElementById("shuffleBtn").addEventListener("click", () => {
-  songs.sort(() => Math.random() - 0.5);
-  assignFavorites();
-  displayRanking();
-});
-
-function createImage() {
-  const container = document.getElementById("ranking");
-
-  html2canvas(container, { scale: 2 }).then(canvas => {
-    const image = canvas.toDataURL("image/png");
-    const imageContainer = document.getElementById("imageContainer");
-    imageContainer.innerHTML = "";
-
-    const imgElement = document.createElement("img");
-    imgElement.src = image;
-    imgElement.alt = "Ranking generado";
-    imgElement.style.marginTop = "20px";
-    imageContainer.appendChild(imgElement);
-
-    const downloadButton = document.createElement("button");
-    downloadButton.textContent = "Descargar Imagen (PNG)";
-    downloadButton.onclick = () => {
-      const a = document.createElement("a");
-      a.href = image;
-      a.download = "ranking-musical.png";
-      a.click();
-      imageContainer.innerHTML = "";
-    };
-
-    imageContainer.appendChild(downloadButton);
-  });
-}
-function showPlays(song, rank) {
-  const plays = Math.floor(Math.random() * 1000000) + 10000; // Generar reproducciones aleatorias
-  const messageContainer = document.getElementById("playsMessageContainer");
-  messageContainer.innerHTML = `
-    <div class="message">
-      <h2>Posición #${rank}: ${song.title}</h2>
-      <p>Artista: ${song.artist}</p>
-      <p><strong>Reproducciones:</strong> ${plays.toLocaleString()} 🎧</p>
-    </div>
-  `;
-  messageContainer.style.display = "block";
-
-  // Ocultar el mensaje después de 5 segundos
-  setTimeout(() => {
-    messageContainer.style.display = "none";
-  }, 5000);
-}
-
-
-document.getElementById("createImgBtn").addEventListener("click", createImage);
