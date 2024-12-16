@@ -20,6 +20,7 @@ function shuffleRanking() {
   // Actualizar las posiciones previas antes de mezclar
   songs.forEach((song, index) => {
     song.previousPosition = index;
+    song.plays = null; // Reinicia las reproducciones
   });
 
   // Mezclar el ranking
@@ -73,7 +74,7 @@ function showPlays(index) {
   const song = songs[index];
   const playsElement = document.getElementById(`plays-${index}`);
 
-  // Solo genera reproducciones si no existen
+  // Generar reproducciones si no existen
   if (song.plays === null) {
     song.plays = Math.floor(Math.random() * 1000000) + 10000;
     playsElement.textContent = `${song.plays.toLocaleString()} reproducciones`;
